@@ -5,7 +5,8 @@ import stinky.monkey.Chess.*;
 public class Moves {
     public static enum State {
         TAKE,
-        MOVE
+        MOVE,
+        THREAT
     }
 
     public Position position;

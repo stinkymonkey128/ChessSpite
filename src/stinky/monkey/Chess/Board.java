@@ -45,6 +45,6 @@ public class Board {
     public Position atPosition(int x, int y) {
         if (x > 7 || x < 0 || y > 7 || y < 0)
             return null;
-        return board[x][y];
+        return board[y][x];
     }
 }

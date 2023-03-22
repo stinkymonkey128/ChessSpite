@@ -15,6 +15,12 @@ public class Pawn extends Piece {
     }
 
     @Override
+    public Move.State move(Position position) {
+        firstMove = false;
+        return super.move(position);
+    }
+
+    @Override
     public ArrayList<Move> getAvailableMoves(Board board) {
         currentMoves.clear();
         int modifier = this.team == Piece.TEAM.BLACK ? -1 : 1;

@@ -7,15 +7,19 @@ import java.util.ArrayList;
 
 public class King extends Piece {
     private boolean checked;
+    private boolean castleAble;
 
     public King(TEAM team, Position position) {
         super(team, position);
         checked = false;
+        castleAble = true;
     }
 
     public boolean isChecked() {
         return checked;
     }
+
+    public boolean canCastle() {return castleAble;}
 
     public void setChecked() {
         this.checked = true;

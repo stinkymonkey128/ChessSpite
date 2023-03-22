@@ -21,8 +21,13 @@ public class King extends Piece {
         this.checked = true;
     }
 
+    /**
+     * Always call king availmoves last!!
+     * @param board
+     * @return positions of available moves
+     */
     @Override
-    public ArrayList<Moves> getAvailableMoves(Board board) {
+    public ArrayList<Move> getAvailableMoves(Board board) {
         return null;
     }
 }

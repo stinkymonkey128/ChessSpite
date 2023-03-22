@@ -11,17 +11,17 @@ public class Pawn extends Piece {
     public Pawn(TEAM team, Position position) {
         super(team, position);
         firstMove = true;
-        currentMoves = new ArrayList<Moves>();
+        currentMoves = new ArrayList<Move>();
     }
 
     @Override
-    public ArrayList<Moves> getAvailableMoves(Board board) {
-        ArrayList<Moves> out = new ArrayList<Moves>();
+    public ArrayList<Move> getAvailableMoves(Board board) {
+        currentMoves.clear();
         int modifier = this.team == Piece.TEAM.BLACK ? -1 : 1;
 
         Position jump = board.atPosition(position.getX(), position.getY() + 2 * modifier);
         if (firstMove && jump.getCurrentPiece() == null) {
-            out.add(new Moves(jump, Moves.State.MOVE));
+            currentMoves.add(new Move(jump, Move.State.MOVE));
         }
 
         Position takeL = board.atPosition(position.getX() - 1, position.getY() + 1 * modifier);
@@ -30,33 +30,34 @@ public class Pawn extends Piece {
 
         // Checking left diagonal
         if (takeL != null &&
-                takeL.getCurrentPiece() != null) {
+                takeL.getCurrentPiece() != null &&
+                takeL.getCurrentPiece().getTeam() != team) {
             Piece selPiece = takeL.getCurrentPiece();
             if (!selPiece.getClass().equals(King.class))
-                out.add(new Moves(takeL, Moves.State.TAKE));
+                currentMoves.add(new Move(takeL, Move.State.TAKE));
             else {
                 ((King) selPiece).setChecked();
-                out.add(new Moves(takeL, Moves.State.THREAT));
+                currentMoves.add(new Move(takeL, Move.State.THREAT));
             }
         }
 
         // Checking right diagonal
         if (takeR != null &&
-                takeR.getCurrentPiece() != null) {
+                takeR.getCurrentPiece() != null &&
+                takeL.getCurrentPiece().getTeam() != team) {
             Piece selPiece = takeR.getCurrentPiece();
             if (!selPiece.getClass().equals(King.class))
-                out.add(new Moves(takeR, Moves.State.TAKE));
+                currentMoves.add(new Move(takeR, Move.State.TAKE));
             else {
                 ((King) selPiece).setChecked();
-                out.add(new Moves(takeR, Moves.State.THREAT));
+                currentMoves.add(new Move(takeR, Move.State.THREAT));
             }
         }
 
         Position forward = board.atPosition(position.getX(), position.getY() + 1 * modifier);
         if (forward != null && forward.getCurrentPiece() == null)
-            out.add(new Moves(forward, Moves.State.MOVE));
+            currentMoves.add(new Move(forward, Move.State.MOVE));
 
-        currentMoves = out;
-        return out;
+        return currentMoves;
     }
 }

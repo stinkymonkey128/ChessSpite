@@ -12,7 +12,7 @@ public abstract class Piece {
 
     protected TEAM team;
     protected Position position;
-    protected ArrayList<Moves> currentMoves;
+    protected ArrayList<Move> currentMoves;
 
     public Piece(TEAM team, Position position) {
         this.team = team;
@@ -28,19 +28,45 @@ public abstract class Piece {
         return position;
     }
 
-    public abstract ArrayList<Moves> getAvailableMoves(Board board);
-    public Moves.State move(Position position) {
-        for (Moves move : currentMoves) {
+    public TEAM getTeam() {
+        return team;
+    }
+
+    /**
+     * Gets available positions for piece includes moves, takes, and threats.
+     * Also updates the private arraylist for the move call.
+     */
+    public abstract ArrayList<Move> getAvailableMoves(Board board);
+
+    public Move.State move(Position position) {
+        for (Move move : currentMoves) {
             if (move.position == position) {
-                if (move.state != Moves.State.THREAT) {
+                if (move.state != Move.State.THREAT) {
                     move.position.set(this);
                     this.position = move.position;
                     return move.state;
                 }
-                return Moves.State.THREAT;
+                return Move.State.THREAT;
             }
         }
         throw new IncorrectMove();
+    }
+
+    protected void selectRadius(Board board, int xDirec, int yDirec, Position current) {
+        Position nextPos = board.atPosition(current.getX() + xDirec, current.getY() + yDirec);
+        if (nextPos == null)
+            return;
+        Piece selectPiece = nextPos.getCurrentPiece();
+        if (selectPiece != null && selectPiece.getTeam() != team) {
+            if (selectPiece.getClass().equals(King.class))
+                currentMoves.add(new Move(nextPos, Move.State.THREAT));
+            else
+                currentMoves.add(new Move(nextPos, Move.State.TAKE));
+        }
+        if (selectPiece == null) {
+            currentMoves.add(new Move(nextPos, Move.State.MOVE));
+            selectRadius(board, xDirec, yDirec, nextPos);
+        }
     }
 
     public class IncorrectMove extends RuntimeException {

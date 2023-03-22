@@ -24,8 +24,10 @@ public class Knight extends Piece {
                 if (selectPie == null)
                     currentMoves.add(new Move(selectPos, Move.State.MOVE));
                 else if (selectPie.getTeam() != team) {
-                    if (selectPie.getClass().equals(King.class))
+                    if (selectPie.getClass().equals(King.class)) {
                         currentMoves.add(new Move(selectPos, Move.State.THREAT));
+                        ((King) selectPie).setChecked();
+                    }
                     else 
                         currentMoves.add(new Move(selectPos, Move.State.TAKE));
                 }

@@ -4,9 +4,20 @@ import stinky.monkey.Chess.Pieces.*;
 
 public class Board {
     private Position board[][];
+    private Move.State currentBHeatMap[][];
+    private Move.State currentWHeatMap[][];
 
     public Board() {
         init();
+    }
+
+    private void updateHeatmap() {
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                Position current = board[y][x];
+
+            }
+        }
     }
 
     private void init() {
@@ -46,5 +57,9 @@ public class Board {
         if (x > 7 || x < 0 || y > 7 || y < 0)
             return null;
         return board[y][x];
+    }
+
+    public Position atPosition(Vec2 vec) {
+        return atPosition(vec.x, vec.y);
     }
 }

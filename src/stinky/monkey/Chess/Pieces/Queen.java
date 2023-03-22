@@ -12,6 +12,15 @@ public class Queen extends Piece {
 
     @Override
     public ArrayList<Move> getAvailableMoves(Board board) {
-        return null;
+        currentMoves.clear();
+        selectRadius(board, 0, -1, position);
+        selectRadius(board, 0, 1, position);
+        selectRadius(board, -1, 0, position);
+        selectRadius(board, 1, 0, position);
+        selectRadius(board, 1, 1, position);
+        selectRadius(board, 1, -1, position);
+        selectRadius(board, -1, 1, position);
+        selectRadius(board, -1, -1, position);
+        return currentMoves;
     }
 }

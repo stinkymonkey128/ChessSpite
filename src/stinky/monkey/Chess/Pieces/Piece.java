@@ -58,8 +58,10 @@ public abstract class Piece {
             return;
         Piece selectPiece = nextPos.getCurrentPiece();
         if (selectPiece != null && selectPiece.getTeam() != team) {
-            if (selectPiece.getClass().equals(King.class))
+            if (selectPiece.getClass().equals(King.class)) {
                 currentMoves.add(new Move(nextPos, Move.State.THREAT));
+                ((King) selectPiece).setChecked();
+            }
             else
                 currentMoves.add(new Move(nextPos, Move.State.TAKE));
         }

@@ -32,6 +32,9 @@ public class King extends Piece {
      */
     @Override
     public ArrayList<Move> getAvailableMoves(Board board) {
-        return null;
+        currentMoves.clear();
+
+
+        return currentMoves;
     }
 }

@@ -19,12 +19,15 @@ public class Rook extends Piece {
         return super.move(position);
     }
 
+    public boolean canCastle() {return castleAble;};
+
     @Override
     public ArrayList<Move> getAvailableMoves(Board board) {
-        Piece maybeKing = board.atPosition(4, team == Piece.TEAM.BLACK ? 7 : 0).getCurrentPiece();
-        if (castleAble && maybeKing != null && maybeKing.getClass().equals(King.class) && ((King) maybeKing).canCastle()) {
-
-        }
-        return null;
+        currentMoves.clear();
+        selectRadius(board, 0, -1, position);
+        selectRadius(board, 0, 1, position);
+        selectRadius(board, -1, 0, position);
+        selectRadius(board, 1, 0, position);
+        return currentMoves;
     }
 }

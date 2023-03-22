@@ -59,9 +59,4 @@ public class Pawn extends Piece {
         currentMoves = out;
         return out;
     }
-
-    @Override
-    public Moves.State move(Position position) {
-        return null;
-    }
 }

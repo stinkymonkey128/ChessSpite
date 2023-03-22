@@ -30,12 +30,22 @@ public abstract class Piece {
 
     public abstract ArrayList<Moves> getAvailableMoves(Board board);
     public Moves.State move(Position position) {
-
+        for (Moves move : currentMoves) {
+            if (move.position == position) {
+                if (move.state != Moves.State.THREAT) {
+                    move.position.set(this);
+                    this.position = move.position;
+                    return move.state;
+                }
+                return Moves.State.THREAT;
+            }
+        }
+        throw new IncorrectMove();
     }
 
     public class IncorrectMove extends RuntimeException {
-        public IncorrectMove(Throwable error) {
-            super("Move is not part of the available MOVE or TAKE list", error);
+        public IncorrectMove() {
+            super("Move is not part of the available MOVE or TAKE list");
         }
     }
 }

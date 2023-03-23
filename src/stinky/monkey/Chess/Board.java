@@ -1,21 +1,50 @@
 package stinky.monkey.Chess;
 
 import stinky.monkey.Chess.Pieces.*;
+import java.util.*;
 
 public class Board {
     private Position board[][];
     private Move.State currentBHeatMap[][];
     private Move.State currentWHeatMap[][];
 
+    private Vec2 whiteKing;
+    private Vec2 blackKing;
+    private ArrayList<Piece> whitePieces;
+    private ArrayList<Piece> blackPieces;
+
     public Board() {
         init();
+        whitePieces = new ArrayList<Piece>();
+        blackPieces = new ArrayList<Piece>();
+    }
+
+    private void updatePieces() {
+        whitePieces.clear();
+        blackPieces.clear();
+
+        for (int i = 0; i < 8; i++)
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j].getCurrentPiece() != null) {
+                    Piece selectPiece = board[i][j].getCurrentPiece();
+                    if (selectPiece.getTeam() == Piece.TEAM.WHITE)
+                        whitePieces.add(selectPiece);
+                    else
+                        blackPieces.add(selectPiece);
+                }
+            }
     }
 
     private void updateHeatmap() {
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                Position current = board[y][x];
+        updatePieces();
 
+        for (Piece wPiece : whitePieces) {
+            if (wPiece.getClass().equals(King.class))
+                whiteKing = wPiece.getPosition().getVec();
+            else {
+                for (Move move : wPiece.getAvailableMoves(this)) {
+
+                }
             }
         }
     }

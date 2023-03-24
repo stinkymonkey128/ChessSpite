@@ -15,8 +15,7 @@ public class Position {
     }
 
     public Position(int x, int y, Piece piece) {
-        xy.x = x;
-        xy.y = y;
+        xy = new Vec2(x, y);
         currentPiece = piece;
     }
 
@@ -27,6 +26,10 @@ public class Position {
     public void set(Piece piece) {
         currentPiece = piece;
         currentPiece.setPosition(this);
+    }
+
+    public void remove() {
+        currentPiece = null;
     }
 
     public Piece getCurrentPiece() {

@@ -15,7 +15,7 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public Move.State move(Position position) {
+    public Move.State move(Position position) throws IncorrectMove {
         firstMove = false;
         return super.move(position);
     }
@@ -26,7 +26,7 @@ public class Pawn extends Piece {
         int modifier = this.team == Piece.TEAM.BLACK ? -1 : 1;
 
         Position jump = board.atPosition(position.getX(), position.getY() + 2 * modifier);
-        if (firstMove && jump.getCurrentPiece() == null) {
+        if (firstMove && jump != null && jump.getCurrentPiece() == null) {
             currentMoves.add(new Move(jump, Move.State.MOVE));
         }
 

@@ -14,7 +14,7 @@ public class Rook extends Piece {
     }
 
     @Override
-    public Move.State move(Position position) {
+    public Move.State move(Position position) throws IncorrectMove {
         castleAble = false;
         return super.move(position);
     }

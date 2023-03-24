@@ -6,7 +6,8 @@ public class Move {
     public static enum State {
         TAKE,
         MOVE,
-        THREAT
+        THREAT,
+        CHECKMATE
     }
 
     public Position position;

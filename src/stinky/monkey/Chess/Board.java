@@ -13,10 +13,31 @@ public class Board {
     private ArrayList<Piece> whitePieces;
     private ArrayList<Piece> blackPieces;
 
+    private Piece.TEAM currentTeam;
+
     public Board() {
         init();
-        whitePieces = new ArrayList<Piece>();
-        blackPieces = new ArrayList<Piece>();
+    }
+
+    public boolean nextMove(Vec2 from, Vec2 to) {
+        return nextMove(atPosition(from), atPosition(to));
+    }
+
+    public boolean nextMove(Position from, Position to) {
+        try {
+            Piece piece = from.getCurrentPiece();
+            if (piece == null || piece.getTeam() != currentTeam)
+                return false;
+
+            updateHeatmap();
+            piece.move(to);
+            currentTeam = currentTeam == Piece.TEAM.WHITE ? Piece.TEAM.BLACK : Piece.TEAM.WHITE;
+
+            return true;
+        } catch (Piece.IncorrectMove e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private void updatePieces() {
@@ -43,17 +64,51 @@ public class Board {
                 whiteKing = wPiece.getPosition().getVec();
             else {
                 for (Move move : wPiece.getAvailableMoves(this)) {
+                    Position currentPos = move.position;
+                    int x = currentPos.getX();
+                    int y = currentPos.getY();
 
+                    Move.State currentState = currentWHeatMap[x][y];
+                    if (currentState == null )
+                        currentWHeatMap[x][y] = move.state;
+                    if (currentState != null && currentState != Move.State.THREAT)
+                        currentWHeatMap[x][y] = move.state;
                 }
             }
         }
+
+        for (Piece bPiece : blackPieces) {
+            if (bPiece.getClass().equals(King.class))
+                blackKing = bPiece.getPosition().getVec();
+            else {
+                for (Move move : bPiece.getAvailableMoves(this)) {
+                    Position currentPos = move.position;
+                    int x = currentPos.getX();
+                    int y = currentPos.getY();
+
+                    Move.State currentState = currentBHeatMap[x][y];
+                    if (currentState == null )
+                        currentBHeatMap[x][y] = move.state;
+                    if (currentState != null && currentState != Move.State.THREAT)
+                        currentBHeatMap[x][y] = move.state;
+                }
+            }
+        }
+
+
     }
 
     private void init() {
+        whitePieces = new ArrayList<Piece>();
+        blackPieces = new ArrayList<Piece>();
+
+        currentWHeatMap = new Move.State[8][8];
+        currentBHeatMap = new Move.State[8][8];
+
         board = new Position[8][8];
         for (int i = 0; i < 8; i++)
             for (int j = 0; j < 8; j++)
-                board[i][j] = new Position(i, j);
+                board[i][j] = new Position(j, i);
 
         for (int i = 0; i < 8; i++) {
             board[6][i].set(new Pawn(Piece.TEAM.BLACK, board[6][i]));
@@ -80,6 +135,9 @@ public class Board {
 
         board[7][4].set(new King(Piece.TEAM.BLACK, board[7][4]));
         board[0][4].set(new King(Piece.TEAM.WHITE, board[0][4]));
+
+        updateHeatmap();
+        currentTeam = Piece.TEAM.WHITE;
     }
 
     public Position atPosition(int x, int y) {
@@ -90,5 +148,70 @@ public class Board {
 
     public Position atPosition(Vec2 vec) {
         return atPosition(vec.x, vec.y);
+    }
+
+    public Move.State[][] getOppHeatMap(Piece.TEAM team) {
+        return team == Piece.TEAM.WHITE ? currentBHeatMap : currentWHeatMap;
+    }
+
+    @Override
+    public String toString() {
+        String out = "";
+
+        for (Position[] row : board) {
+            for (Position pos : row) {
+                Piece piece = pos.getCurrentPiece();
+                if (piece == null)
+                    out += " ";
+                else {
+                    switch (piece.getClass().toString()) {
+                        case "class stinky.monkey.Chess.Pieces.King":
+                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                                out += "♔";
+                            else
+                                out += "♚";
+                            break;
+
+                        case "class stinky.monkey.Chess.Pieces.Queen":
+                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                                out += "♕";
+                            else
+                                out += "♛";
+                            break;
+
+                        case "class stinky.monkey.Chess.Pieces.Rook":
+                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                                out += "♖";
+                            else
+                                out += "♜";
+                            break;
+
+                        case "class stinky.monkey.Chess.Pieces.Bishop":
+                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                                out += "♗";
+                            else
+                                out += "♝";
+                            break;
+
+                        case "class stinky.monkey.Chess.Pieces.Knight":
+                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                                out += "♘";
+                            else
+                                out += "♞";
+                            break;
+
+                        case "class stinky.monkey.Chess.Pieces.Pawn":
+                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                                out += "♙";
+                            else
+                                out += "♟";
+                            break;
+                    }
+                }
+            }
+            out += "\n";
+        }
+
+        return out;
     }
 }

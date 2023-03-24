@@ -18,6 +18,7 @@ public abstract class Piece {
         this.team = team;
         this.position = position;
         this.position.set(this);
+        currentMoves = new ArrayList<Move>();
     }
 
     public void setPosition(Position position) {
@@ -38,12 +39,14 @@ public abstract class Piece {
      */
     public abstract ArrayList<Move> getAvailableMoves(Board board);
 
-    public Move.State move(Position position) {
+    public Move.State move(Position position) throws IncorrectMove {
         for (Move move : currentMoves) {
+            //System.out.println(move.position.getY() + " " + move.position.getX());
             if (move.position == position) {
                 if (move.state != Move.State.THREAT) {
+                    this.position.remove();
                     move.position.set(this);
-                    this.position = move.position;
+                    //this.position = move.position;
                     return move.state;
                 }
                 return Move.State.THREAT;
@@ -71,7 +74,7 @@ public abstract class Piece {
         }
     }
 
-    public class IncorrectMove extends RuntimeException {
+    public class IncorrectMove extends Exception {
         public IncorrectMove() {
             super("Move is not part of the available MOVE or TAKE list");
         }

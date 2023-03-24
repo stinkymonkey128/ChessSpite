@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public class King extends Piece {
     private boolean checked;
     private boolean castleAble;
+    // SPAGHETTI
+    private Board board;
 
     public King(TEAM team, Position position) {
         super(team, position);
@@ -26,6 +28,9 @@ public class King extends Piece {
         this.checked = true;
     }
 
+    /*
+    This shit some spaghetti code CLEAN LATER zzz
+     */
     @Override
     public Move.State move(Position position) throws IncorrectMove {
         checked = false;
@@ -35,6 +40,21 @@ public class King extends Piece {
             System.out.println(move.position.getX() + " " + move.position.getY());
             if (move.position == position) {
                 if (move.state != Move.State.THREAT) {
+                    if (move.state == Move.State.CASTLE) {
+                        int posY = team == TEAM.WHITE ? 0 : 7;
+                        Position rook;
+
+                        if (move.position.getX() == 0) {
+                            rook = board.atPosition(new Vec2(0, posY));
+                            rook.getCurrentPiece().setPosition(board.atPosition(new Vec2(2, posY)));
+                            rook.set(null);
+                        } else {
+                            rook = board.atPosition(new Vec2(7, posY));
+                            rook.getCurrentPiece().setPosition(board.atPosition(new Vec2(5, posY)));
+                            rook.set(null);
+                        }
+
+                    }
                     move.position.set(this);
                     this.position = move.position;
                     return move.state;
@@ -42,6 +62,7 @@ public class King extends Piece {
                 return Move.State.THREAT;
             }
         }
+
         throw new IncorrectMove();
     }
 
@@ -52,15 +73,16 @@ public class King extends Piece {
      */
     @Override
     public ArrayList<Move> getAvailableMoves(Board board) {
+        this.board = board;
         currentMoves.clear();
         Move.State heatMap[][] = board.getOppHeatMap(team);
 
         if (castleAble) {
             int posY = team == TEAM.WHITE ? 0 : 7;
             if (board.atPosition(new Vec2(1, posY)).getCurrentPiece() == null && board.atPosition(new Vec2(2, posY)).getCurrentPiece() == null)
-                currentMoves.add(new Move(board.atPosition(new Vec2(1, posY)), Move.State.MOVE));
+                currentMoves.add(new Move(board.atPosition(new Vec2(1, posY)), Move.State.CASTLE));
             if (board.atPosition(new Vec2(4, posY)).getCurrentPiece() == null && board.atPosition(new Vec2(5, posY)).getCurrentPiece() == null && board.atPosition(new Vec2(6, posY)).getCurrentPiece() == null)
-                currentMoves.add(new Move(board.atPosition(new Vec2(6, posY)), Move.State.MOVE));
+                currentMoves.add(new Move(board.atPosition(new Vec2(6, posY)), Move.State.CASTLE));
         }
 
         for (int y = -1 + position.getY(); y < 2; y++) {

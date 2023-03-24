@@ -140,6 +140,21 @@ public class Board {
         currentTeam = Piece.TEAM.WHITE;
     }
 
+    public Piece.TEAM checkCheckmate() {
+        King wKing = (King) atPosition(whiteKing).getCurrentPiece();
+        King bKing = (King) atPosition(blackKing).getCurrentPiece();
+
+        if (wKing.isChecked() && wKing.getAvailableMoves(this).isEmpty())
+            return Piece.TEAM.BLACK;
+        if (bKing.isChecked() && bKing.getAvailableMoves(this).isEmpty())
+            return Piece.TEAM.WHITE;
+        return null;
+    }
+
+    public Piece.TEAM whosTurn() {
+        return currentTeam;
+    }
+
     public Position atPosition(int x, int y) {
         if (x > 7 || x < 0 || y > 7 || y < 0)
             return null;
@@ -154,6 +169,7 @@ public class Board {
         return team == Piece.TEAM.WHITE ? currentBHeatMap : currentWHeatMap;
     }
 
+    // 🖕🖕🖕
     @Override
     public String toString() {
         String out = "";
@@ -166,42 +182,42 @@ public class Board {
                 else {
                     switch (piece.getClass().toString()) {
                         case "class stinky.monkey.Chess.Pieces.King":
-                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                            if (piece.getTeam() == Piece.TEAM.BLACK)
                                 out += "♔";
                             else
                                 out += "♚";
                             break;
 
                         case "class stinky.monkey.Chess.Pieces.Queen":
-                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                            if (piece.getTeam() == Piece.TEAM.BLACK)
                                 out += "♕";
                             else
                                 out += "♛";
                             break;
 
                         case "class stinky.monkey.Chess.Pieces.Rook":
-                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                            if (piece.getTeam() == Piece.TEAM.BLACK)
                                 out += "♖";
                             else
                                 out += "♜";
                             break;
 
                         case "class stinky.monkey.Chess.Pieces.Bishop":
-                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                            if (piece.getTeam() == Piece.TEAM.BLACK)
                                 out += "♗";
                             else
                                 out += "♝";
                             break;
 
                         case "class stinky.monkey.Chess.Pieces.Knight":
-                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                            if (piece.getTeam() == Piece.TEAM.BLACK)
                                 out += "♘";
                             else
                                 out += "♞";
                             break;
 
                         case "class stinky.monkey.Chess.Pieces.Pawn":
-                            if (piece.getTeam() == Piece.TEAM.WHITE)
+                            if (piece.getTeam() == Piece.TEAM.BLACK)
                                 out += "♙";
                             else
                                 out += "♟";

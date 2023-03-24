@@ -37,7 +37,29 @@ public class Tester {
 
     public static void main(String[] args) {
         Board board = new Board();
-        System.out.println(board);
+        Piece.TEAM checkmated = null;
+        Scanner cin = new Scanner(System.in);
+
+        while (checkmated == null) {
+            int fx = 0, fy = 0, tx = 0, ty = 0;
+            System.out.println(board.whosTurn() == Piece.TEAM.WHITE ? "WHITE" : "BLACK");
+            System.out.println(board);
+            System.out.println("FROM");
+            System.out.print("x: ");
+            fx = cin.nextInt();
+            System.out.print("y: ");
+            fy = cin.nextInt();
+            System.out.println("TO");
+            System.out.print("x: ");
+            tx = cin.nextInt();
+            System.out.print("y: ");
+            ty = cin.nextInt();
+            System.out.println(board.nextMove(new Vec2(fx, fy), new Vec2(tx, ty)));
+
+
+            checkmated = board.checkCheckmate();
+        }
+        /*
         //printHeatMap(board.getOppHeatMap(Piece.TEAM.BLACK));
         printAvailMoves(board.atPosition(new Vec2(1, 1)).getCurrentPiece().getAvailableMoves(board));
         System.out.println(board.nextMove(new Vec2(2, 1), new Vec2(2, 3)));
@@ -48,6 +70,6 @@ public class Tester {
         System.out.println(board);
         printAvailMoves(board.atPosition(new Vec2(2, 3)).getCurrentPiece().getAvailableMoves(board));
         System.out.println(board.nextMove(new Vec2(2, 3), new Vec2(1, 4)));
-        System.out.println(board);
+        System.out.println(board);*/
     }
 }

@@ -7,7 +7,8 @@ public class Move {
         TAKE,
         MOVE,
         THREAT,
-        CHECKMATE
+        CHECKMATE,
+        CASTLE
     }
 
     public Position position;
